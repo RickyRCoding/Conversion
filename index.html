@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conversion Made Easy</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
+
+      :root {
+        --google-blue: #1a73e8;
+        --google-red: #ea4335;
+        --google-yellow: #fbbc05;
+        --google-green: #34a853;
+
+        --bg: #f8f9fa;
+        --card-bg: #ffffff;
+        --text-primary: #202124;
+        --text-secondary: #5f6368;
+        --border: #dadce0;
+
+        --shadow-normal:
+          0 1px 2px 0 rgba(60, 64, 67, 0.3),
+          0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        --shadow-hover:
+          0 1px 3px 0 rgba(60, 64, 67, 0.3),
+          0 4px 8px 3px rgba(60, 64, 67, 0.15);
+        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          "Outfit",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background-color: var(--bg);
+        color: var(--text-primary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        transition: var(--transition);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 420px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transition: var(--transition);
+      }
+
+      .app-card {
+        background-color: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: var(--shadow-normal);
+        width: 100%;
+        overflow: hidden;
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .app-card:hover {
+        box-shadow: var(--shadow-hover);
+      }
+
+      .google-stripes {
+        display: flex;
+        height: 6px;
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      .stripe {
+        flex: 1;
+        height: 100%;
+      }
+      .stripe.blue {
+        background-color: var(--google-blue);
+      }
+      .stripe.red {
+        background-color: var(--google-red);
+      }
+      .stripe.yellow {
+        background-color: var(--google-yellow);
+      }
+      .stripe.green {
+        background-color: var(--google-green);
+      }
+
+      .card-content {
+        padding: 32px 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      .app-header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .logo {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 4px;
+        color: var(--google-green);
+      }
+
+      .g-blue {
+        color: var(--google-blue);
+      }
+      .g-red {
+        color: var(--google-red);
+      }
+      .g-yellow {
+        color: var(--google-yellow);
+      }
+      .g-green {
+        color: var(--google-green);
+      }
+
+      .subtitle {
+        font-size: 11px;
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+
+      .input-group {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .input-wrapper {
+        position: relative;
+        flex: 1;
+      }
+
+      input[type="number"] {
+        width: 100%;
+        font-size: 18px;
+        padding: 20px 12px 6px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background-color: var(--card-bg);
+        color: var(--text-primary);
+        outline: none;
+        transition: var(--transition);
+        font-weight: 500;
+      }
+
+      input[type="number"]:focus {
+        border-color: var(--google-blue);
+        box-shadow: 0 0 0 1px var(--google-blue);
+      }
+
+      .floating-label {
+        position: absolute;
+        left: 12px;
+        top: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        transition: var(--transition);
+        pointer-events: none;
+      }
+
+      .select-wrapper {
+        width: 140px;
+      }
+
+      select {
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        padding: 0 32px 0 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background-color: var(--card-bg);
+        color: var(--text-primary);
+        outline: none;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 500;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+      }
+
+      select:focus {
+        border-color: var(--google-blue);
+        box-shadow: 0 0 0 1px var(--google-blue);
+      }
+
+      .divider {
+        height: 1px;
+        background-color: var(--border);
+        margin-bottom: 24px;
+      }
+
+      .outputs {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .output-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .output-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        transition: var(--transition);
+      }
+
+      .usd-card::before {
+        background-color: var(--google-blue);
+      }
+      .cad-card::before {
+        background-color: var(--google-red);
+      }
+      .syp-new-card::before {
+        background-color: var(--google-yellow);
+      }
+      .syp-old-card::before {
+        background-color: var(--google-green);
+      }
+
+      .output-card:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .usd-card:hover {
+        border-color: rgba(26, 115, 232, 0.4);
+      }
+      .cad-card:hover {
+        border-color: rgba(234, 67, 53, 0.4);
+      }
+      .syp-new-card:hover {
+        border-color: rgba(251, 188, 5, 0.4);
+      }
+      .syp-old-card:hover {
+        border-color: rgba(52, 168, 83, 0.4);
+      }
+
+      .card-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .flag {
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .currency-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .currency-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .currency-code {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+
+      .converted-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .symbol {
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .app-footer {
+        text-align: center;
+        font-size: 11px;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 0;
+          background-color: var(--card-bg);
+          align-items: stretch;
+        }
+
+        .container {
+          max-width: 100%;
+          min-height: 100vh;
+          gap: 0;
+        }
+
+        .app-card {
+          border-radius: 0;
+          box-shadow: none;
+          min-height: 100vh;
+          height: 100vh;
+          border: none;
+        }
+
+        .card-content {
+          padding: 24px 16px;
+        }
+
+        .app-footer {
+          padding: 16px;
+          border-top: 1px solid var(--border);
+          background-color: var(--bg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="app-card">
+        <div class="google-stripes">
+          <div class="stripe blue"></div>
+          <div class="stripe red"></div>
+          <div class="stripe yellow"></div>
+          <div class="stripe green"></div>
+        </div>
+
+        <div class="card-content">
+          <header class="app-header">
+            <h1 class="logo">Conversion Made Easy</h1>
+            <p class="subtitle">Currency Converter</p>
+          </header>
+
+          <div class="input-group">
+            <div class="input-wrapper">
+              <input
+                type="number"
+                id="amount"
+                placeholder="0.00"
+                min="0"
+                step="any"
+                autofocus
+              />
+              <span class="floating-label">Amount</span>
+            </div>
+            <div class="select-wrapper">
+              <select id="currency">
+                <option value="SYP_NEW">🇸🇾 New SY</option>
+                <option value="USD">🇺🇸 USD</option>
+                <option value="CAD">🇨🇦 CAD</option>
+                <option value="SYP_OLD">🇸🇾 Old SY</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="outputs">
+            <div class="output-card usd-card">
+              <div class="card-left">
+                <span class="flag">🇺🇸</span>
+                <div class="currency-info">
+                  <span class="currency-name">US Dollar</span>
+                  <span class="currency-code">USD</span>
+                </div>
+              </div>
+              <span class="converted-value">
+                <span class="symbol">$</span>
+                <span id="val-USD">0.00</span>
+              </span>
+            </div>
+
+            <div class="output-card cad-card">
+              <div class="card-left">
+                <span class="flag">🇨🇦</span>
+                <div class="currency-info">
+                  <span class="currency-name">Canadian Dollar</span>
+                  <span class="currency-code">CAD</span>
+                </div>
+              </div>
+              <span class="converted-value">
+                <span class="symbol">C$</span>
+                <span id="val-CAD">0.00</span>
+              </span>
+            </div>
+
+            <div class="output-card syp-new-card">
+              <div class="card-left">
+                <span class="flag">🇸🇾</span>
+                <div class="currency-info">
+                  <span class="currency-name">Syrian Pound (New)</span>
+                  <span class="currency-code">SYP (New)</span>
+                </div>
+              </div>
+              <span class="converted-value">
+                <span class="symbol">New SY</span>
+                <span id="val-SYP_NEW">0.00</span>
+              </span>
+            </div>
+
+            <div class="output-card syp-old-card">
+              <div class="card-left">
+                <span class="flag">🇸🇾</span>
+                <div class="currency-info">
+                  <span class="currency-name">Syrian Pound (Old)</span>
+                  <span class="currency-code">SYP (Old)</span>
+                </div>
+              </div>
+              <span class="converted-value">
+                <span class="symbol">Old SY</span>
+                <span id="val-SYP_OLD">0.00</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="app-footer">
+        <p>Rates: 1 USD = 1.43 CAD = 12,800 SYP (Old)</p>
+      </footer>
+    </div>
+
+    <script>
+      // Hardcoded rates: Base is USD
+      const rateUSD = 1.0;
+      const rateCAD = 1.43;
+      const rateSYP_OLD = 12800.0;
+      // As requested: the new Syrian Pound is the old one divided by 100
+      const rateSYP_NEW = rateSYP_OLD / 100;
+
+      const rates = {
+        USD: rateUSD,
+        CAD: rateCAD,
+        SYP_OLD: rateSYP_OLD,
+        SYP_NEW: rateSYP_NEW,
+      };
+
+      const amountInput = document.getElementById("amount");
+      const currencySelect = document.getElementById("currency");
+
+      function formatValue(value) {
+        return new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(value);
+      }
+
+      function convert() {
+        const amount = parseFloat(amountInput.value);
+        const sourceCurrency = currencySelect.value;
+
+        if (isNaN(amount) || amount < 0) {
+          Object.keys(rates).forEach((curr) => {
+            document.getElementById(`val-${curr}`).textContent = formatValue(0);
+          });
+          return;
+        }
+
+        // Convert to base currency (USD)
+        const baseAmount = amount / rates[sourceCurrency];
+
+        // Convert from base currency to all target currencies
+        Object.keys(rates).forEach((curr) => {
+          const converted = baseAmount * rates[curr];
+          document.getElementById(`val-${curr}`).textContent =
+            formatValue(converted);
+        });
+      }
+
+      amountInput.addEventListener("input", convert);
+      currencySelect.addEventListener("change", convert);
+
+      // Run conversion initially to set default values
+      convert();
+    </script>
+  </body>
+</html>
