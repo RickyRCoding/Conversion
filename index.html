@@ -248,17 +248,11 @@
         transition: var(--transition);
       }
 
-      .usd-card::before {
-        background-color: var(--google-blue);
-      }
       .cad-card::before {
         background-color: var(--google-red);
       }
-      .syp-new-card::before {
-        background-color: var(--google-yellow);
-      }
-      .syp-old-card::before {
-        background-color: var(--google-green);
+      .eur-card::before {
+        background-color: var(--google-blue);
       }
 
       .output-card:hover {
@@ -266,18 +260,33 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       }
 
-      .usd-card:hover {
-        border-color: rgba(26, 115, 232, 0.4);
-      }
       .cad-card:hover {
         border-color: rgba(234, 67, 53, 0.4);
       }
-      .syp-new-card:hover {
-        border-color: rgba(251, 188, 5, 0.4);
+      .eur-card:hover {
+        border-color: rgba(26, 115, 232, 0.4);
       }
-      .syp-old-card:hover {
-        border-color: rgba(52, 168, 83, 0.4);
+
+      /* Rate info container */
+      .rate-info-container {
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-align: center;
+        margin-top: -12px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        background-color: rgba(0, 0, 0, 0.02);
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px dashed var(--border);
+        transition: var(--transition);
       }
+
+      /* Footer styling removed */
 
       .card-left {
         display: flex;
@@ -327,13 +336,6 @@
         font-weight: 500;
       }
 
-      .app-footer {
-        text-align: center;
-        font-size: 11px;
-        color: var(--text-secondary);
-        font-weight: 500;
-      }
-
       @media (max-width: 480px) {
         body {
           padding: 0;
@@ -359,11 +361,7 @@
           padding: 24px 16px;
         }
 
-        .app-footer {
-          padding: 16px;
-          border-top: 1px solid var(--border);
-          background-color: var(--bg);
-        }
+        /* Footer styling removed */
       }
     </style>
   </head>
@@ -388,6 +386,7 @@
               <input
                 type="number"
                 id="amount"
+                value="1"
                 placeholder="0.00"
                 min="0"
                 step="any"
@@ -397,31 +396,19 @@
             </div>
             <div class="select-wrapper">
               <select id="currency">
-                <option value="SYP_NEW">🇸🇾 New SY</option>
-                <option value="USD">🇺🇸 USD</option>
                 <option value="CAD">🇨🇦 CAD</option>
-                <option value="SYP_OLD">🇸🇾 Old SY</option>
+                <option value="EUR" selected>🇮🇹 EUR</option>
               </select>
             </div>
+          </div>
+
+          <div class="rate-info-container" id="rate-info">
+            Fetching live exchange rates...
           </div>
 
           <div class="divider"></div>
 
           <div class="outputs">
-            <div class="output-card usd-card">
-              <div class="card-left">
-                <span class="flag">🇺🇸</span>
-                <div class="currency-info">
-                  <span class="currency-name">US Dollar</span>
-                  <span class="currency-code">USD</span>
-                </div>
-              </div>
-              <span class="converted-value">
-                <span class="symbol">$</span>
-                <span id="val-USD">0.00</span>
-              </span>
-            </div>
-
             <div class="output-card cad-card">
               <div class="card-left">
                 <span class="flag">🇨🇦</span>
@@ -436,53 +423,38 @@
               </span>
             </div>
 
-            <div class="output-card syp-new-card">
+            <div class="output-card eur-card">
               <div class="card-left">
-                <span class="flag">🇸🇾</span>
+                <span class="flag">🇮🇹</span>
                 <div class="currency-info">
-                  <span class="currency-name">Syrian Pound (New)</span>
-                  <span class="currency-code">SYP (New)</span>
+                  <span class="currency-name">Italian Euro</span>
+                  <span class="currency-code">EUR</span>
                 </div>
               </div>
               <span class="converted-value">
-                <span class="symbol">New SY</span>
-                <span id="val-SYP_NEW">0.00</span>
-              </span>
-            </div>
-
-            <div class="output-card syp-old-card">
-              <div class="card-left">
-                <span class="flag">🇸🇾</span>
-                <div class="currency-info">
-                  <span class="currency-name">Syrian Pound (Old)</span>
-                  <span class="currency-code">SYP (Old)</span>
-                </div>
-              </div>
-              <span class="converted-value">
-                <span class="symbol">Old SY</span>
-                <span id="val-SYP_OLD">0.00</span>
+                <span class="symbol">€</span>
+                <span id="val-EUR">0.00</span>
               </span>
             </div>
           </div>
         </div>
+
+
       </div>
 
     </div>
 
     <script>
-      // Hardcoded rates: Base is USD
-      const rateUSD = 1.0;
-      const rateCAD = 1.43;
-      const rateSYP_OLD = 13150.0;
-      // As requested: the new Syrian Pound is the old one divided by 100
-      const rateSYP_NEW = rateSYP_OLD / 100;
+      const API_KEY = "b46a3c5f0a4543f91a4feedb";
+      const API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/CAD`;
 
-      const rates = {
-        USD: rateUSD,
-        CAD: rateCAD,
-        SYP_OLD: rateSYP_OLD,
-        SYP_NEW: rateSYP_NEW,
+      // Fallback rates if API fails (Base is CAD)
+      const fallbackRates = {
+        CAD: 1.0,
+        EUR: 0.62,
       };
+
+      let rates = { ...fallbackRates };
 
       const amountInput = document.getElementById("amount");
       const currencySelect = document.getElementById("currency");
@@ -494,33 +466,73 @@
         }).format(value);
       }
 
+      function updateRateInfo() {
+        const rateInfo = document.getElementById("rate-info");
+        if (rateInfo) {
+          const cadToEur = formatValue(rates.EUR);
+          const eurToCad = formatValue(1 / rates.EUR);
+          rateInfo.innerHTML = `
+            <span>1 CAD = <strong>${cadToEur} EUR</strong></span>
+            <span style="color: var(--text-secondary); margin: 0 4px;">•</span>
+            <span>1 EUR = <strong>${eurToCad} CAD</strong></span>
+          `;
+        }
+      }
+
       function convert() {
         const amount = parseFloat(amountInput.value);
         const sourceCurrency = currencySelect.value;
 
         if (isNaN(amount) || amount < 0) {
           Object.keys(rates).forEach((curr) => {
-            document.getElementById(`val-${curr}`).textContent = formatValue(0);
+            const el = document.getElementById(`val-${curr}`);
+            if (el) el.textContent = formatValue(0);
           });
           return;
         }
 
-        // Convert to base currency (USD)
-        const baseAmount = amount / rates[sourceCurrency];
+        // Convert to base currency (CAD is our API base)
+        const baseAmount = sourceCurrency === "CAD" ? amount : amount / rates.EUR;
 
         // Convert from base currency to all target currencies
         Object.keys(rates).forEach((curr) => {
-          const converted = baseAmount * rates[curr];
-          document.getElementById(`val-${curr}`).textContent =
-            formatValue(converted);
+          const converted = curr === "CAD" ? baseAmount : baseAmount * rates.EUR;
+          const el = document.getElementById(`val-${curr}`);
+          if (el) el.textContent = formatValue(converted);
         });
+      }
+
+      async function fetchRates() {
+        try {
+          const response = await fetch(API_URL);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          if (data.result === "success") {
+            rates.CAD = data.conversion_rates.CAD || 1.0;
+            rates.EUR = data.conversion_rates.EUR;
+            
+            updateRateInfo();
+            convert();
+          } else {
+            throw new Error(data["error-type"] || "API returned failure");
+          }
+        } catch (error) {
+          console.error("Failed to fetch live exchange rates:", error);
+          rates = { ...fallbackRates };
+          updateRateInfo();
+          convert();
+        }
       }
 
       amountInput.addEventListener("input", convert);
       currencySelect.addEventListener("change", convert);
 
-      // Run conversion initially to set default values
+      // Initialize
+      updateRateInfo();
       convert();
+      fetchRates();
     </script>
   </body>
 </html>
